@@ -10,7 +10,7 @@ var FriendlyFingers = /** @class */ (function () {
         var elCurrent = document.querySelector('#currentLetter');
         this.timer = document.querySelector('#timer');
         this.letter = elCurrent;
-        document.addEventListener('keyup', function (ev) {
+        document.addEventListener('keydown', function (ev) {
             var keyPressed = ev.key.toUpperCase();
             if (ev.keyCode === 32) {
                 _this.reset();
@@ -28,7 +28,7 @@ var FriendlyFingers = /** @class */ (function () {
         var _this = this;
         document.addEventListener('keyup', function (ev) {
             var key = ev.key.toUpperCase();
-            if (key === 'A') {
+            if (key === 'A' && _this.index === 0) {
                 _this.startTimer();
                 _this.advance();
             }

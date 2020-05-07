@@ -20,7 +20,7 @@ export default class FriendlyFingers {
         const elCurrent = document.querySelector('#currentLetter');
         this.timer = document.querySelector('#timer');
         this.letter = elCurrent;
-        document.addEventListener('keyup', (ev: KeyboardEvent) => {
+        document.addEventListener('keydown', (ev: KeyboardEvent) => {
 
             let keyPressed = ev.key.toUpperCase();
 
@@ -43,7 +43,7 @@ export default class FriendlyFingers {
     start() {
         document.addEventListener('keyup', (ev: KeyboardEvent) => {
             let key = ev.key.toUpperCase();
-            if(key === 'A') {
+            if(key === 'A' && this.index === 0) {
                 this.startTimer();
                 this.advance();
             } else {
