@@ -1,0 +1,26 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  background: #111;
+  display: grid;
+  place-items: center;
+}
+
+.screen {
+  font-family: Modak, sans-serif;
+  font-size: 6em;
+  color: #f06d06;
+  background: none;
+  appearance: none;
+  border: none;
+  text-align: center;
+}
+
+#timer {
+  color: white;
+  font-size: 4rem;
+}
