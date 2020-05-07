@@ -26,7 +26,7 @@ var FriendlyFingers = /** @class */ (function () {
     };
     FriendlyFingers.prototype.start = function () {
         var _this = this;
-        document.addEventListener('keyup', function (ev) {
+        document.addEventListener('keydown', function (ev) {
             var key = ev.key.toUpperCase();
             if (key === 'A' && _this.index === 0) {
                 _this.startTimer();
