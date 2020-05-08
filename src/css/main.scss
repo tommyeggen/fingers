@@ -1,26 +1,144 @@
+$ctaColor: #06f083;
+$timeColor: #06b9f0;
+$fogDog: #f06d06;
+$font: 'Fredoka One';
+
+
 * {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  height: 100vh;
-  background: #111;
-  display: grid;
-  place-items: center;
+    height: 100vh;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    font-family: "Titillium Web", sans-serif;
+}
+
+.container {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    position: relative;
+    height: 80vh;
 }
 
 .screen {
-  font-family: Modak, sans-serif;
-  font-size: 6em;
-  color: #f06d06;
-  background: none;
-  appearance: none;
-  border: none;
-  text-align: center;
+    font-family: $font, sans-serif;
+    font-size: 6em;
+    color: $fogDog;
+    background: none;
+    appearance: none;
+    border: none;
+    text-align: center;
+
+    .intro {
+        display: block;
+        color: white;
+        font-size: 2rem;
+    }
+
 }
 
-#timer {
-  color: white;
-  font-size: 4rem;
+.cta {
+    color: $ctaColor;
+    display: block;
+    animation: shake 500ms linear infinite alternate;
+}
+
+#scores {
+    background: #222;
+    box-sizing: border-box;
+    padding: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .number {
+        color: $timeColor;
+    }
+
+    #clear-scores {
+        appearance: none;
+        border: none;
+        background-color: #333;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: #888888;
+        cursor: pointer;
+        transition: 200ms;
+        &:hover {
+            background: #444;
+        }
+    }
+}
+
+.--is-wrong {
+    animation: shake 75ms linear infinite alternate;
+}
+
+
+
+@keyframes shake {
+    0%   {transform: scale(1)}
+    100%   {transform: scale(1.2)}
+}
+
+#timer-container {
+    color: white;
+    font-size: 4rem;
+    text-align: center;
+    opacity: 0;
+    transition: 200ms;
+    &.--is-visible {
+        opacity: 1;
+    }
+
+    #timer {
+        color: $timeColor;
+    }
+}
+
+.dialog {
+    position: absolute;
+    width: 50vw;
+    height: 40vh;
+    top: calc(50% - 20vh);
+    left: calc((50% - 25vw));
+    background: #111;
+    padding: 20px;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.end-screen {
+
+    text-align: center;
+
+    h2 {
+        font-size: 4rem;
+        font-family: $font, 'sans-serif';
+        color: $fogDog;
+    }
+
+    #end-score {
+        font-size: 5rem;
+        color: $timeColor;
+    }
+
+    p {
+        font-size: 2rem;
+        color: white;
+        .space {
+            color: $ctaColor;
+        }
+    }
 }

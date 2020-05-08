@@ -36,6 +36,9 @@ var FriendlyFingers = /** @class */ (function () {
                 if (key === _this.alphabet[_this.index]) {
                     _this.advance();
                 }
+                else {
+                    _this.fail();
+                }
             }
         });
     };
@@ -52,7 +55,6 @@ var FriendlyFingers = /** @class */ (function () {
         }
     };
     FriendlyFingers.prototype.fail = function () {
-        alert('failed');
     };
     FriendlyFingers.prototype.startTimer = function () {
         var _this = this;

@@ -1,30 +1,39 @@
+import Scores from "./Scores";
+import * as Mustache from "mustache";
+
 export default class FriendlyFingers {
 
     private time: number
+    private startTime: number;
     private index: number
     private timer: HTMLElement
     private intervalId: any;
-    private results: any = [];
-    private started: boolean = false;
 
+    private scores: Scores;
     private letter: any;
 
     private alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    private endTemplate: string;
 
     constructor() {
         this.init();
+        this.endTemplate = document.querySelector('[data-id="tpl-end-screen"]').innerHTML;
     }
 
 
     init() {
-        const elCurrent = document.querySelector('#currentLetter');
+        const elCurrent = document.querySelector('#current-letter');
+        this.scores = new Scores(document.querySelector('#scores'));
+        this.scores.render();
         this.timer = document.querySelector('#timer');
         this.letter = elCurrent;
+        this.timer.click();
         document.addEventListener('keydown', (ev: KeyboardEvent) => {
-
             let keyPressed = ev.key.toUpperCase();
 
-            if(ev.keyCode === 32) {
+            if(keyPressed === ' ') {
+                this.timer.parentElement.classList.add('--is-visible');
+                this.removeEndScreen();
                 this.reset();
             }
         })
@@ -34,61 +43,123 @@ export default class FriendlyFingers {
 
     reset() {
         clearInterval(this.intervalId);
+        this.letter.parentElement.classList.remove('--is-wrong')
         this.index = 0;
         this.letter.innerText = this.alphabet[this.index];
-        this.timer.innerText = '0.00';
-
+        this.letter.classList.add('cta');
+        this.timer.innerText = 'Start by hitting';
     }
 
     start() {
         document.addEventListener('keydown', (ev: KeyboardEvent) => {
             let key = ev.key.toUpperCase();
             if(key === 'A' && this.index === 0) {
+                this.letter.classList.remove('cta')
                 this.startTimer();
                 this.advance();
             } else {
                 if(key === this.alphabet[this.index]) {
                     this.advance();
                 }
+
+                else {
+                    if(this.index > 0) {
+                        this.fail();
+                    }
+                }
+
             }
         })
     }
 
     advance() {
+        this.letter.parentElement.classList.remove('--is-wrong')
+        let scale = 1;
+        let interval = setInterval(() => {
+            if(scale < 1.8) {
+                scale = scale + .05;
+            } else {
+                scale = 1;
+                clearInterval(interval)
+            }
+            this.letter.parentElement.style.transform = 'scale(' + scale + ')';
+        }, 5)
+
         this.index++;
         let letter = this.alphabet[this.index];
 
         if(letter) {
             this.letter.innerText = this.alphabet[this.index];
+            this.letter.parentElement.style.removeProperty('transform');
+
         } else {
-            // No more letters
-            this.saveTime(this.timer.innerText)
+            // Congratulations, you finished
             this.finish()
         }
 
     }
 
     fail() {
-        alert('failed');
+        this.letter.parentElement.classList.add('--is-wrong');
     }
 
     startTimer() {
+        this.startTime = Date.now();
         let time = 0;
         this.intervalId = setInterval(() => {
-            time += 10
-            this.timer.innerText = (time / 1000).toFixed(3);
+            time += 10;
+            this.timer.innerText = String((time / 1000).toFixed(2));
         }, 10)
     }
 
-    saveTime(time: any) {
-        this.time = time;
-        this.results.push(time);
-    }
-
     finish() {
-        alert(this.time)
+        clearInterval(this.intervalId);
+        let actualTime = (Date.now() - this.startTime);
+        let score = Scores.createScore(actualTime);
+        this.scores.saveScore(score);
         this.reset();
+        this.scores.render();
+        this.displayEndScreen(score);
     }
 
+    displayEndScreen(score: Score) {
+
+        let highScore = this.scores.getHighScore();
+
+        const isHighScore = score.actualTime <= highScore.actualTime;
+
+
+        let getGreeting = () => {
+
+            if(isHighScore) {
+                return 'NEW HIGH SCORE!'
+            }
+
+            let diff = score.actualTime - highScore.actualTime;
+
+            if(diff < 500) {
+                return 'Ah, so close...'
+            } else {
+                return 'Not good enough...';
+            }
+
+        }
+        let context = {
+            time: score.score,
+            greeting: getGreeting(),
+            isHighScore: isHighScore,
+        }
+        let dialog = document.createElement('div')
+        dialog.classList.add('dialog');
+        dialog.innerHTML = Mustache.render(this.endTemplate, context)
+        document.body.appendChild(dialog);
+    }
+
+    removeEndScreen() {
+        let dialog = document.querySelector('.dialog');
+        if(dialog) {
+            dialog.parentElement.removeChild(dialog);
+        }
+    }
 
 }
