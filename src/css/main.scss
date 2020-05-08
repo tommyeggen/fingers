@@ -48,36 +48,49 @@ body {
     animation: shake 500ms linear infinite alternate;
 }
 
-#scores {
+#footer {
     background: #222;
     box-sizing: border-box;
     padding: 20px;
     color: white;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+
+    .buttons {
+        display: flex;
+        align-items: center;
+
+        .button {
+            height: 40px;
+            width: 40px;
+            background: #333;
+            border-radius: 50%;
+            appearance: none;
+            border: none;
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 200ms;
+            &:not(:last-child) {
+                margin-right: 10px;
+            }
+
+            &:hover {
+                background-color: #444;
+            }
+        }
+
+    }
+
+    #scores {
+
+    }
 
     .number {
         color: $timeColor;
-    }
-
-    #clear-scores {
-        appearance: none;
-        border: none;
-        background-color: #333;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        place-items: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        color: #888888;
-        cursor: pointer;
-        transition: 200ms;
-        &:hover {
-            background: #444;
-        }
     }
 }
 

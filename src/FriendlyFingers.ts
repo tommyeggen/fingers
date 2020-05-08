@@ -12,17 +12,27 @@ export default class FriendlyFingers {
     private scores: Scores;
     private letter: any;
 
+    private soundToggle: HTMLElement;
+
     private alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     private endTemplate: string;
 
+    private soundFail: HTMLAudioElement;
+    private soundSuccess: HTMLAudioElement;
+    private soundHighScore: HTMLAudioElement;
+
     constructor() {
-        this.init();
         this.endTemplate = document.querySelector('[data-id="tpl-end-screen"]').innerHTML;
+        this.soundFail = document.querySelector('#sound-fail');
+        this.soundSuccess = document.querySelector('#sound-success');
+        this.soundHighScore = document.querySelector('#sound-high-score');
+        this.init();
     }
 
 
     init() {
         const elCurrent = document.querySelector('#current-letter');
+        this.soundToggle = document.querySelector('#toggle-sound');
         this.scores = new Scores(document.querySelector('#scores'));
         this.scores.render();
         this.timer = document.querySelector('#timer');
@@ -38,7 +48,31 @@ export default class FriendlyFingers {
             }
         })
 
+        if(this.isMuted()) {
+            this.mute();
+        }
+
+        this.soundToggle.addEventListener('click', () => {
+            this.toggleSound();
+        });
+
         this.start()
+    }
+
+    mute() {
+        this.soundToggle.firstChild.textContent = 'volume_up'
+        this.soundFail.volume = 0;
+        this.soundSuccess.volume = 0;
+        this.soundHighScore.volume = 0;
+        localStorage.setItem('is_muted', 'true');
+    }
+
+    unMute() {
+        this.soundToggle.firstChild.textContent = 'volume_off'
+        this.soundFail.volume = 1;
+        this.soundSuccess.volume = 1;
+        this.soundHighScore.volume = 1;
+        localStorage.setItem('is_muted', 'false');
     }
 
     reset() {
@@ -73,6 +107,7 @@ export default class FriendlyFingers {
     }
 
     advance() {
+        this.playSound('success');
         this.letter.parentElement.classList.remove('--is-wrong')
         let scale = 1;
         let interval = setInterval(() => {
@@ -100,6 +135,7 @@ export default class FriendlyFingers {
     }
 
     fail() {
+        this.playSound('fail');
         this.letter.parentElement.classList.add('--is-wrong');
     }
 
@@ -153,12 +189,44 @@ export default class FriendlyFingers {
         dialog.classList.add('dialog');
         dialog.innerHTML = Mustache.render(this.endTemplate, context)
         document.body.appendChild(dialog);
+        if(isHighScore) {
+            this.playSound('high-score');
+        }
     }
 
     removeEndScreen() {
         let dialog = document.querySelector('.dialog');
         if(dialog) {
             dialog.parentElement.removeChild(dialog);
+        }
+    }
+
+    playSound(sound: string) {
+        let el: HTMLAudioElement;
+        switch(sound) {
+            case 'success':
+                el = this.soundSuccess;
+                break;
+            case 'fail':
+                el = this.soundFail;
+                break;
+            case 'high-score':
+                el = this.soundHighScore;
+        }
+        el.play().then(() => {
+            el.currentTime = 0;
+        })
+    }
+
+    isMuted() {
+        return localStorage.getItem('is_muted') === 'true';
+    }
+
+    toggleSound() {
+        if(this.isMuted() === false) {
+            this.mute();
+        } else {
+            this.unMute();
         }
     }
 

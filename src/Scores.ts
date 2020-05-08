@@ -59,7 +59,7 @@ export default class Scores {
     }
 
     setup() {
-        const clearBtn = this.container.querySelector('#clear-scores');
+        const clearBtn = document.querySelector('#clear-scores');
         clearBtn.addEventListener('click', () => {
             this.clear();
         });
@@ -80,7 +80,7 @@ export default class Scores {
 
     clear() {
         this.scores = [];
-        localStorage.clear();
+        localStorage.setItem('scores', JSON.stringify([]));
         this.render();
     }
 

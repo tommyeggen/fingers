@@ -21,25 +21,37 @@
 </head>
 <body>
 
+<audio src="./audio/ping.ogg" style="display: none" id="sound-fail" preload="auto"></audio>
+<audio src="./audio/dong.ogg" style="display: none" id="sound-success" preload="auto"></audio>
+<audio src="./audio/tada.mp3" style="display: none" id="sound-high-score" preload="auto"></audio>
+
+
 <div class="container">
     <div>
         <div id="timer-container"><span id="timer">Start typing</span></div>
         <div class="screen">
             <div id="letter-container">
-                <span id="current-letter"><span class="intro">How fast can you type the alphabet?</span>Hit <span class="cta">SPACEBAR</span> to start</span>
+                <span id="current-letter">
+                    <span class="intro">
+                        How fast can you type the alphabet?</span>
+                    Hit <span class="cta">SPACEBAR</span> to start
+                </span>
             </div>
         </div>
     </div>
 </div>
 
-<div id="scores">
+<div id="footer">
+    <div id="scores"></div>
+    <div class="buttons">
+        <div class="button" id="clear-scores" title="Clear scores"><i class="material-icons">clear</i></div>
+        <div class="button" id="toggle-sound" title="Toggle audio"><i class="material-icons">volume_off</i></div>
+    </div>
 </div>
 <script data-id="tpl-scores" type="text/template">
     <div id="high-score">
         <h2>Your high score: <span class="number">{{highScore.score}}</span></h2>
     </div>
-    <div style="flex: 1"></div>
-    <button id="clear-scores" title="Clear scores"><span class="material-icons">close</span></button>
 </script>
 <script data-id="tpl-end-screen" type="text/template">
     <div class="end-screen">
