@@ -201,7 +201,7 @@ export default class FriendlyFingers {
         }
     }
 
-    playSound(sound: string) {
+    playSound(sound: string, ignorePromise?: boolean) {
         let el: HTMLAudioElement;
         switch(sound) {
             case 'success':
@@ -213,9 +213,14 @@ export default class FriendlyFingers {
             case 'high-score':
                 el = this.soundHighScore;
         }
-        el.play().then(() => {
-            el.currentTime = 0;
-        })
+        if(ignorePromise === true) {
+            return el.play();
+        } else {
+            el.play().then(() => {
+                el.currentTime = 0;
+            })
+        }
+
     }
 
     isMuted() {

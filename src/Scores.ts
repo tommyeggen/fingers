@@ -23,10 +23,10 @@ export default class Scores {
         }
 
         scores = scores.sort((a:any, b:any) => {
-            return a.actualTime > b.actualTime
+            return a.actualTime - b.actualTime
         });
 
-        if(scores.length > 3) {
+        if(scores.length > 10) {
             scores[scores.length - 1] = score;
         } else {
             scores.push(score);
@@ -69,7 +69,7 @@ export default class Scores {
         let scores: any = this.scores;
         if(scores && scores.length >= 1) {
             scores.sort((a: any, b: any) => {
-                return a.actualTime > b.actualTime;
+                return a.actualTime - b.actualTime;
             });
         } else {
             return {};
