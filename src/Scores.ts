@@ -15,6 +15,9 @@ export default class Scores {
     }
 
     saveScore(score: Score) {
+
+        ga('set', 'dimension1', score.score);
+
         let scores: any;
         if (this.getSavedScores()) {
             scores = this.getSavedScores();
